@@ -1,4 +1,3 @@
-
 #Crear un programa que permita conectarse con el controlador APIC-EM de Cisco
    # El usuario tendrá que escoger la opción que quiera (no tendrá que especificar la url a mano)
     #Añadir, como mínimo, 4 funcionalidades
@@ -12,6 +11,8 @@ requests.packages.urllib3.disable_warnings()
 
 # Variables
 apic_em_ip = "https://sandboxapicem.cisco.com/api/v1"
+tarea ="pol"
+
 
 def obtener_token(url):
 
@@ -25,7 +26,7 @@ def obtener_token(url):
     headers = {"content-type" : "application/json"}
 
     # Add the API call to the URL argument.
-    url +=api_call
+    url += api_call
 
     response = requests.post(url, data=json.dumps(payload), headers=headers, verify=False).json()
 
@@ -33,8 +34,7 @@ def obtener_token(url):
     return response["response"]["serviceTicket"]
 
 
-
-def obtener_hosts(token, url): 
+def obtener_hosts_ip(token, url): 
     # Define API Call
     api_call = "/host"
 
@@ -51,18 +51,55 @@ def obtener_hosts(token, url):
     return hosts
        
 
+
+def escojer_tarea(tarea):
+    operacion = input('''
+introduce la operacion que quieres realizar:
+1 lista IP hosts
+2 sumar
+3 multiplicar
+4 dividir
+''')
+    if operacion == '1':
+        
+        hosts = obtener_hosts_ip(auth_token, apic_em_ip)
+        tarea ="hostIp"
+
+        print("Listado IP hosts")
+
+        for host in hosts: 
+            print(host[tarea])
+        otra_opercion()
+    elif operacion =='2':
+        tarea ="mac"
+        print("Listado mac hosts")
+        #  list of hosts
+        for host in hosts: 
+            print(host[tarea])
+        
+def otra_opercion():
+    otro_calculo = input('''
+quieres realizar otra operacion?
+introduce Y para YES o N para NO.
+''')
+
+    if otro_calculo.upper() == 'Y':
+        escojer_tarea(tarea)
+    elif otro_calculo.upper() == 'N':
+        print('Adios')
+    else:
+        otra_opercion()
+
 # Assign obtained authentication token to a variable. Provide APIC-EM's URL address.
 auth_token = obtener_token(apic_em_ip)
 
+#Escojer que tarea quiere realizar el usuario
 
-#  list of hosts
-hosts = obtener_hosts(auth_token, apic_em_ip)
-
-
-print("Client List from APIC-EM")
+escojer_tarea(tarea)
 
 
-for host in hosts: 
-    print(host["hostIp"])
 
 
+    
+    
+      
