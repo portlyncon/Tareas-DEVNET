@@ -9,13 +9,16 @@ introduce la operacion que quieres realizar:
 ** potencia
 > raiz 
 ''')
-
+    #s'ha d'afeguir un control exception si no es un int el valor introduit
     numero_1 = int(input('introduce un numero: '))
         
     
     if operacion != '>' and operacion == '-' or operacion =='+' or operacion == '*' or operacion == '/' or operacion == '**':
+        print("introduce un operador valido")
+        
         numero_2 = int(input('introduce un numero: '))
-    
+    else:
+        print("introduce un operador valido")
 
     if operacion == '-':
         
