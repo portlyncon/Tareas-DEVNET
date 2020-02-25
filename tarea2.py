@@ -53,6 +53,9 @@ def obtener_hosts_ip(token, url):
 
 
 def escojer_tarea(tarea):
+   
+    hosts = obtener_hosts_ip(auth_token, apic_em_ip)
+
     operacion = input('''
 introduce la operacion que quieres realizar:
 1 lista IP hosts
@@ -62,21 +65,30 @@ introduce la operacion que quieres realizar:
 ''')
     if operacion == '1':
         
-        hosts = obtener_hosts_ip(auth_token, apic_em_ip)
         tarea ="hostIp"
-
         print("Listado IP hosts")
-
+     #passar el metode imrpimir hosts a general !!!!!!!!!!!!!!!!!
         for host in hosts: 
             print(host[tarea])
         otra_opercion()
     elif operacion =='2':
-        tarea ="mac"
+
+        tarea ="hostMac"
         print("Listado mac hosts")
         #  list of hosts
         for host in hosts: 
             print(host[tarea])
-        
+        otra_opercion()
+    elif  operacion =='3':
+   
+        tarea ="connectedNetworkDeviceIpAddress"
+        print("Listado mac hosts")
+        #  list of hosts
+        for host in hosts: 
+            print(host[tarea])
+        otra_opercion()  
+
+
 def otra_opercion():
     otro_calculo = input('''
 quieres realizar otra operacion?
@@ -96,10 +108,4 @@ auth_token = obtener_token(apic_em_ip)
 #Escojer que tarea quiere realizar el usuario
 
 escojer_tarea(tarea)
-
-
-
-
     
-    
-      
