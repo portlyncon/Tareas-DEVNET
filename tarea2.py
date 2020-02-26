@@ -1,4 +1,4 @@
-#Crear un programa que permita conectarse con el controlador APIC-EM de Cisco
+    #Crear un programa que permita conectarse con el controlador APIC-EM de Cisco
     #El usuario tendrá que escoger la opción que quiera (no tendrá que especificar la url a mano)
     #Añadir, como mínimo, 4 funcionalidades
 
@@ -107,12 +107,14 @@ introduce la operacion que quieres realizar:
 def imprimir_lista(hosts,etiqueta):
     for host in hosts: 
             print(host[etiqueta]) 
-    otra_opercion()
+    
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#for host in hosts: 
- #   print("{ip:20} {mac:20} {type:10}".format(ip=host["hostIp"], 
-  #                                            mac=host["hostMac"], 
-   #                                           type=host["hostType"]))
+    #for host in hosts: 
+     #   print("{ip:20} {mac:20} {type:10}".format(ip=host["hostIp"], 
+      #                                           mac=host["hostMac"], 
+       #                                          type=host["hostType"]))
+    otra_opercion()
+
 
 def otra_opercion():
     otro_calculo = input('''
