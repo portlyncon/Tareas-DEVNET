@@ -1,4 +1,4 @@
-   #Crear un programa que permita conectarse con el controlador APIC-EM de Cisco
+    #Crear un programa que permita conectarse con el controlador APIC-EM de Cisco
     #El usuario tendrá que escoger la opción que quiera (no tendrá que especificar la url a mano)
     #Añadir, como mínimo, 4 funcionalidades
 
@@ -55,8 +55,6 @@ def obtener_serial(token, url):
     return hosts
 
 def escojer_tarea(etiqueta):
-   
-    hosts = obtener_hosts_ip(auth_token, direccion)
 
     operacion = input('''
 introduce la operacion que quieres realizar:
@@ -65,6 +63,12 @@ introduce la operacion que quieres realizar:
 3 conectado a
 4 serialNumber dispositivo
 ''')
+    
+    if operacion != '4':
+        hosts = obtener_hosts_ip(autorizacion, direccion)
+    else:
+        hosts = obtener_serial(autorizacion, direccion)    
+    
     if operacion == '1':
         
         etiqueta ="hostIp"
@@ -77,7 +81,7 @@ introduce la operacion que quieres realizar:
         print("Listado mac hosts")
         imprimir_lista(hosts,etiqueta)
     
-    elif  operacion =='3':
+    elif operacion =='3':
    
         etiqueta ="connectedNetworkDeviceIpAddress"
         print("Listado equipos conectados")
@@ -85,7 +89,6 @@ introduce la operacion que quieres realizar:
    
     elif operacion =='4':
 
-        hosts = obtener_serial(auth_token, direccion)
         etiqueta ="hostname"
         print("Listado de serial number dispositivos")
         imprimir_lista(hosts,etiqueta)
@@ -94,14 +97,14 @@ counter = 0
 
 def imprimir_lista(hosts,etiqueta):
     for host in hosts: 
-            print(host[etiqueta]) 
+            print("nombre equipo:",host["id"],"ip:",host[etiqueta],"macaddress:",host["hostMac"]) 
    
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     #for host in hosts: 
      #   print("{ip:20} {mac:20} {type:10}".format(ip=host["hostIp"], 
       #                                           mac=host["hostMac"], 
        #                                          type=host["hostType"]))
-            print("Nombre equipo",hosts[counter][etiqueta],"device mac addres")
+            #print("Nombre equipo",hosts[counter][etiqueta],"device mac addres")
     otra_tarea()
 
 
@@ -118,8 +121,8 @@ introduce Y para YES o N para NO.
     else:
         otra_tarea()
 
-# Assign obtained authentication token to a variable. Provide APIC-EM's URL address.
-auth_token = obtener_token(direccion)
+# obetener autorizacion en APIC-EM
+autorizacion = obtener_token(direccion)
 
 #Escojer que tarea quiere realizar el usuario
 escojer_tarea(etiqueta)
