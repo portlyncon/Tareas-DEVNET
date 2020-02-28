@@ -91,7 +91,7 @@ introduce la operacion que quieres realizar:
 
         etiqueta ="hostname"
         print("Listado de serial number dispositivos")
-        imprimir_lista(hosts,etiqueta)
+        imprimir_lista_serial(hosts,etiqueta)
         
 counter = 0 
 
@@ -107,6 +107,11 @@ def imprimir_lista(hosts,etiqueta):
             #print("Nombre equipo",hosts[counter][etiqueta],"device mac addres")
     otra_tarea()
 
+def imprimir_lista_serial(hosts,etiqueta):
+    for host in hosts: 
+            print("nombre equipo:",host["hostname"],"macaddress:",host["macAddress"]) 
+   
+    otra_tarea()
 
 def otra_tarea():
     otra_accion = input('''
