@@ -54,64 +54,96 @@ def obtener_serial(token, url):
     hosts = response["response"]
     return hosts
 
+def obtener_ip_mantenimiento(token, url): 
+    
+    llamada_api = "/location" 
+    headers = {"X-AUTH-TOKEN": token}
+
+    # Combinacion URL, variables API
+    url += llamada_api
+	
+    response = requests.get(url, headers=headers, verify=False).json()
+    
+    # lisa de response 
+    hosts = response["response"]
+    return hosts
+
+def obtener_configuracion(token, url): 
+    
+    llamada_api = "/network-device/config" 
+    headers = {"X-AUTH-TOKEN": token}
+
+    # Combinacion URL, variables API
+    url += llamada_api
+	
+    response = requests.get(url, headers=headers, verify=False).json()
+    
+    # lisa de response 
+    hosts = response["response"]
+    return hosts
+
 def escojer_tarea(etiqueta):
 
     operacion = input('''
 introduce la operacion que quieres realizar:
 1 lista IP hosts
-2 lista macs
-3 conectado a
+2 lista macs dispositivos
+3 localizacion 
 4 serialNumber dispositivo
 ''')
     
-    if operacion != '4':
-        hosts = obtener_hosts_ip(autorizacion, direccion)
-    else:
-        hosts = obtener_serial(autorizacion, direccion)    
+       
     
     if operacion == '1':
-        
+        hosts = obtener_hosts_ip(autorizacion, direccion)
         etiqueta ="hostIp"
         print("Listado IP hosts")
         imprimir_lista(hosts,etiqueta)
         
     elif operacion =='2':
-
+        hosts = obtener_configuracion(autorizacion, direccion) 
         etiqueta ="hostMac"
-        print("Listado mac hosts")
-        imprimir_lista(hosts,etiqueta)
+        print("configuracion de dispositivo")
+        imprimir_configuraciones(hosts,etiqueta)
     
     elif operacion =='3':
-   
-        etiqueta ="connectedNetworkDeviceIpAddress"
-        print("Listado equipos conectados")
-        imprimir_lista(hosts,etiqueta)  
+        hosts = obtener_ip_mantenimiento(autorizacion, direccion)
+        etiqueta ="id"
+        print("localizacion equipos")
+        imprimir_ip_mantenimiento(hosts,etiqueta)  
    
     elif operacion =='4':
-
+        hosts = obtener_serial(autorizacion, direccion) 
         etiqueta ="hostname"
         print("Listado de serial number dispositivos")
-        imprimir_lista_serial(hosts,etiqueta)
+        imprimir_lista_serial_dispositivos(hosts,etiqueta)
         
 counter = 0 
 
 def imprimir_lista(hosts,etiqueta):
     for host in hosts: 
-            print("nombre equipo:",host["id"],"ip:",host[etiqueta],"macaddress:",host["hostMac"]) 
+            print("nombre host:",host["id"],"ip:",host[etiqueta],"macaddress:",host["hostMac"]) 
    
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    #for host in hosts: 
-     #   print("{ip:20} {mac:20} {type:10}".format(ip=host["hostIp"], 
-      #                                           mac=host["hostMac"], 
-       #                                          type=host["hostType"]))
-            #print("Nombre equipo",hosts[counter][etiqueta],"device mac addres")
     otra_tarea()
 
-def imprimir_lista_serial(hosts,etiqueta):
+def imprimir_lista_serial_dispositivos(hosts,etiqueta):
     for host in hosts: 
-            print("nombre equipo:",host["hostname"],"macaddress:",host["macAddress"]) 
+            print("nombre dispositivo:",host["hostname"],"macaddress:",host["macAddress"]) 
    
     otra_tarea()
+
+def imprimir_ip_mantenimiento(hosts,etiqueta):
+    for host in hosts: 
+            print("nombre dispositivo:",host["locationName"],host["id"],"localizacion:",host["geographicalAddress"]) 
+   
+    otra_tarea()
+
+def imprimir_configuraciones(hosts,etiqueta):
+    for host in hosts: 
+            print("id del dispositivo:",host["id"],"configuracion",host["runningConfig"]) 
+   
+    otra_tarea()
+
 
 def otra_tarea():
     otra_accion = input('''
