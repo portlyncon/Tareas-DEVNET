@@ -1,4 +1,4 @@
-    #Crear un programa que permita conectarse con el controlador APIC-EM de Cisco
+       #Crear un programa que permita conectarse con el controlador APIC-EM de Cisco
     #El usuario tendrá que escoger la opción que quiera (no tendrá que especificar la url a mano)
     #Añadir, como mínimo, 4 funcionalidades
 
@@ -20,8 +20,11 @@ def obtener_token(url):
     datos = { "username": "devnetuser", "password": "Cisco123!" }
     headers = {"content-type" : "application/json"}
     url += llamada_api
-
-    response = requests.post(url, data=json.dumps(datos), headers=headers, verify=False).json()
+    try:
+        response = requests.post(url, data=json.dumps(datos), headers=headers, verify=False).json()
+    except:
+         print("No hay conexion a internet")
+         
 
     return response["response"]["serviceTicket"]
 
@@ -33,9 +36,10 @@ def obtener_hosts_ip(token, url):
 
     # Combinacion URL, variables API
     url += llamada_api
-
-    response = requests.get(url, headers=headers, verify=False).json()
-    
+    try:
+        response = requests.get(url, headers=headers, verify=False).json()
+    except:
+        print("No se ha podido establecer la llamada API")
     # lista de response
     hosts = response["response"]
     return hosts
@@ -47,9 +51,11 @@ def obtener_serial(token, url):
 
     # Combinacion URL, variables API
     url += llamada_api
-	
-    response = requests.get(url, headers=headers, verify=False).json()
-    
+    try:
+        response = requests.get(url, headers=headers, verify=False).json()
+    except:
+        print("No se ha podido establecer la llama API")
+
     # lisa de response 
     hosts = response["response"]
     return hosts
@@ -62,8 +68,10 @@ def obtener_ip_mantenimiento(token, url):
     # Combinacion URL, variables API
     url += llamada_api
 	
-    response = requests.get(url, headers=headers, verify=False).json()
-    
+    try:
+        response = requests.get(url, headers=headers, verify=False).json()
+    except:
+        print("No se ha podido establecer la llamada API")
     # lisa de response 
     hosts = response["response"]
     return hosts
@@ -76,8 +84,10 @@ def obtener_configuracion(token, url):
     # Combinacion URL, variables API
     url += llamada_api
 	
-    response = requests.get(url, headers=headers, verify=False).json()
-    
+    try:
+        response = requests.get(url, headers=headers, verify=False).json()
+    except:
+        print("No se ha podido establecer la llamada API")
     # lisa de response 
     hosts = response["response"]
     return hosts
