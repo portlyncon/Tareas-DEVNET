@@ -169,7 +169,12 @@ introduce Y para YES o N para NO.
         otra_tarea()
 
 # obetener autorizacion en APIC-EM
-autorizacion = obtener_token(direccion)
-
+try:
+    autorizacion = obtener_token(direccion)
+except:
+    print("erro de connexion en al red")
 #Escojer que tarea quiere realizar el usuario
-escojer_tarea(etiqueta)
+try:
+    escojer_tarea(etiqueta)
+except:
+    print("error en la ejecucion de tarea")
