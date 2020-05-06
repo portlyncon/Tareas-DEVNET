@@ -1,5 +1,26 @@
+
+
+
+##Esta practica se ha realizado  con la emulación de DE IOSX con reserva en el sandbox de cisco
+##
+##Con acceso mediente VPN de Cisco i con la ip del servicio 10.10.20.48
+##
+##Actualmente cisco ha canviado esta infraestructura,pero se ha decidido seguir con esta version debido a la carga de trabajo
+##
+##que supone ahora mismo realizar los canvios correspondientes
+##
+##Se han testeado la s4 opciones de forma exitosa
+##
+##Isaac Estatuet Salmeron 05/05/2020
+
+
+
+
+
 from ncclient import manager
 import json
+import re
+import sys
 import requests
 import xml.dom.minidom
 import ast
@@ -8,12 +29,6 @@ from netmiko import ConnectHandler
 from device_info import ios_xe1 as device
 
 
-#requests.packages.urllib3.disable_warnings()
-
-
-
-
-#api_url = "https://10.10.20.48/restconf/data/ietf-interfaces:interfaces/"
 
 headers = { "Accept": "application/yang-data+json",
             "Content-type":"application/yang-data+json"
@@ -35,10 +50,10 @@ def escojer_tarea():
 
     operacion = input('''
 introduce la operacion que quieres realizar:
-1 lista interficies
-2 lista macs dispositivos
-3 localizacion 
-4 serialNumber dispositivo
+1 lista interficies(CON ANTGUA VIRTUALIZACION DE IOSX 10.10.20.48)
+2 crear interficie(CON ANTGUA VIRTUALIZACION DE IOSX 10.10.20.48)
+3 borrar inerficie(CON ANTGUA VIRTUALIZACION DE IOSX 10.10.20.48)
+4 tabla de enrutamiento(CON ANTGUA VIRTUALIZACION DE IOSX 10.10.20.48)
 ''')
     
 
@@ -46,7 +61,7 @@ introduce la operacion que quieres realizar:
     if operacion =='1':
 
         
-        api_url = "https://10.10.20.48/restconf/data/ietf-interfaces:interfaces/"
+        api_url = "https://sbx-iosxr-mgmt.cisco.com/restconf/data/ietf-interfaces:interfaces/"
         resp = requests.get(api_url, auth=basicauth, headers=headers, verify=False)
 
         data = resp.text    
@@ -66,22 +81,25 @@ introduce la operacion que quieres realizar:
         for value in pol['ietf-interfaces:interfaces']['interface']:
                
                 datos[cuenta].append(pol['ietf-interfaces:interfaces']['interface'][cuenta]['name'])
-                #print(pol['ietf-interfaces:interfaces']['interface'][cuenta]['name']) 
+                
                 if ((pol['ietf-interfaces:interfaces']['interface'][cuenta]['enabled'])):
                     datos[cuenta].append(pol['ietf-interfaces:interfaces']['interface'][cuenta]['ietf-ip:ipv4']['address'][0]['ip'])
-                    #print(pol['ietf-interfaces:interfaces']['interface'][cuenta]['ietf-ip:ipv4']['address'][0]['ip'])
+                   
                     datos[cuenta].append(pol['ietf-interfaces:interfaces']['interface'][cuenta]['ietf-ip:ipv4']['address'][0]['netmask'])
-                    #print(pol['ietf-interfaces:interfaces']['interface'][cuenta]['ietf-ip:ipv4']['address'][0]['netmask'])
+                    
                 datos.append([])
                 print(cuenta)
                 cuenta = cuenta +1   
-                #print(pol['ietf-interfaces:interfaces']['interface'][cuenta]['name'],pol['ietf-interfaces:interfaces']['interface'][cuenta]['ietf-ip:ipv4']['address'][0]['ip'],pol['ietf-interfaces:interfaces']['interface'][cuenta]['ietf-ip:ipv4']['address'][0]['netmask'])
+                
         print(datos)        
         print(tabulate(datos, headers=cabeceras, floatfmt=".3f"))
         
        
         otra_tarea()
-        
+   
+
+
+        otra_tarea()
 
     if operacion == '2':
 
@@ -92,30 +110,30 @@ que interficie quieres crear?
 que ip quieres poner?
 ''')
 
-            loopback = {"int_name": interficie,
+            nombre = {"int_name": interficie,
             "description": "Demo interface by CLI and netmiko",
             "ip": ip,
             "netmask": "255.255.255.0"}
 
-# Create a CLI configuration
+
             interface_config = [
-            "interface {}".format(loopback["int_name"]),
-            "description {}".format(loopback["description"]),
-            "ip address {} {}".format(loopback["ip"], loopback["netmask"]),
+            "interface {}".format(nombre["int_name"]),
+            "description {}".format(nombre["description"]),
+            "ip address {} {}".format(nombre["ip"], nombre["netmask"]),
             "no shut"
         ]
 
-# Open CLI connection to device
+
             with ConnectHandler(ip = device["address"],
                     port = device["ssh_port"],
                     username = device["username"],
                     password = device["password"],
                     device_type = device["device_type"]) as ch:
 
-    # Send configuration to device
+    
                 output = ch.send_config_set(interface_config)
 
-                # Print the raw command output to the screen
+                
                 print("The following configuration was sent: ")
                 print(output)
 
@@ -127,28 +145,26 @@ que ip quieres poner?
 que interficie quieres borrar?
 ''')
 
-##             operacion = input('''
-##que interficie queire borrar?
-##''')
-            
-            loopback = {"int_name": interficie}
 
-    # Create a CLI configuration
+            
+            nombre = {"int_name": interficie}
+
+   
             interface_config = [
-                "no interface {}".format(loopback["int_name"])
+                "no interface {}".format(nombre["int_name"])
     ]
 
-    # Open CLI connection to device
+   
             with ConnectHandler(ip = device["address"],
                         port = device["ssh_port"],
                         username = device["username"],
                         password = device["password"],
                         device_type = device["device_type"]) as ch:
 
-        # Send configuration to device
+       
                 output = ch.send_config_set(interface_config)
 
-        # Print the raw command output to the screen
+        
                 print("The following configuration was sent: ")
                 print(output)
         
@@ -157,8 +173,8 @@ que interficie quieres borrar?
 
     if operacion == '4':
 
-         print("enviando comando sh route")
-         ssh_client = ConnectHandler(
+       
+        ssh_client = ConnectHandler(
          device_type='cisco_ios',
          host="sbx-iosxr-mgmt.cisco.com",
          port=8181,
@@ -193,5 +209,3 @@ introduce Y para YES o N para NO.
 
     
 escojer_tarea()
-
-   
