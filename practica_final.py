@@ -157,11 +157,19 @@ que interficie quieres borrar?
 
     if operacion == '4':
 
-        print("enviando comando sh route")
-        output= m.send_Command("show route-map")
-        print(output)
-
-    
+         print("enviando comando sh route")
+         ssh_client = ConnectHandler(
+         device_type='cisco_ios',
+         host="sbx-iosxr-mgmt.cisco.com",
+         port=8181,
+         username="admin",
+         password="C1sco12345"
+         )
+        
+        output= ssh_client.send_command("show ip route")
+        
+        print("tabla de enrutamiento:\n{}\n".format(output)) 
+        
         otra_tarea()
 
 
