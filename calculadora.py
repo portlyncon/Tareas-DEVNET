@@ -1,3 +1,6 @@
+
+#Isaac Estatuet
+
 import math 
 def calculadora():
     operacion = input('''
